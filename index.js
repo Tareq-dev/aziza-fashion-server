@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 //dbuser : aziza
 //dbpass : BC3j4YLHAgUXumM6
@@ -17,7 +17,7 @@ async function run() {
     try {
         await client.connect();
         const productsCollection = client.db("azizaFashion").collection("products");
-
+        const ordersCollection = client.db("azizaFashion").collection("orders")
 
         // GET == products
         app.get("/products", async (req, res) => {
@@ -25,17 +25,27 @@ async function run() {
             res.send(products);
         });
 
+
         // GET == single products
         app.get("/products/:id", async (req, res) => {
             const id = req.params.id;
-            console.log(id)
-            const query = { _id: id };
-            console.log(query)
+            const query = { _id: ObjectId(id) };
             const product = await productsCollection.findOne(query);
             res.send(product);
         });
 
+        // POST for order
+        app.post("/orders", async (req, res) => {
+            const orders = req.body;
+            const result = await ordersCollection.insertOne(orders);
+            res.send(result);
+        });
+        // GET == orders
 
+        app.get("/orders",  async (req, res) => {
+            const orders = await ordersCollection.find().toArray();
+            res.send(orders);
+        });
 
 
 
