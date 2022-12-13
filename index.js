@@ -18,6 +18,7 @@ async function run() {
         await client.connect();
         const productsCollection = client.db("azizaFashion").collection("products");
         const ordersCollection = client.db("azizaFashion").collection("orders")
+        const paymentCollection = client.db("azizaFashion").collection("payment")
 
         // GET == products
         app.get("/products", async (req, res) => {
@@ -37,14 +38,22 @@ async function run() {
         // POST for order
         app.post("/orders", async (req, res) => {
             const orders = req.body;
+            console.log(orders)
             const result = await ordersCollection.insertOne(orders);
             res.send(result);
         });
         // GET == orders
 
-        app.get("/orders",  async (req, res) => {
+        app.get("/orders", async (req, res) => {
             const orders = await ordersCollection.find().toArray();
             res.send(orders);
+        });
+        //POST
+
+        app.post("/payment", async (req, res) => {
+            const payment = req.body
+            const result = await paymentCollection.insertOne(payment);
+            res.send(result);
         });
 
 
