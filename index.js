@@ -37,26 +37,39 @@ async function run() {
 
         // POST for order
         app.post("/orders", async (req, res) => {
+
             const orders = req.body;
-            console.log(orders)
             const result = await ordersCollection.insertOne(orders);
             res.send(result);
         });
         // GET == orders
 
         app.get("/orders", async (req, res) => {
-            const orders = await ordersCollection.find().toArray();
-            res.send(orders);
+            const email = req.query.email;
+            if (email) {
+                const query = { email: email };
+                const cursor = ordersCollection.find(query);
+                const orders = await cursor.toArray();
+                res.send(orders);
+            } else {
+                res.status(403).send({ message: "Forbidden access" });
+            }
         });
         //POST
 
-        app.post("/payment", async (req, res) => {
-            const payment = req.body
-            const result = await paymentCollection.insertOne(payment);
-            res.send(result);
-        });
+        app.put("/payment/:email/:id", async (req, res) => {
+            email = req.params.email;
+            const orderId = req.params.id;
+            const filter = { email: email, _id: ObjectId(orderId) };
+            const updatedDoc = {
+              $set: {
+                paid: true,
+              },
+            };
+            const updatedOrder = await ordersCollection.updateOne(filter, updatedDoc);
 
-
+            res.send(updatedOrder);
+          });
 
 
 
