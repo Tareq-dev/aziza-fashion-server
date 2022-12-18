@@ -34,10 +34,22 @@ async function run() {
             const product = await productsCollection.findOne(query);
             res.send(product);
         });
+        //Delete Product
+        app.delete("/products/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productsCollection.deleteOne(query);
+            res.send(result);
+        });
+        //POST PRODUCT
+        app.post("/products", async (req, res) => {
+            const products = req.body;
+            const result = await productsCollection.insertOne(products);
+            res.send(result);
+        });
 
         // POST for order
         app.post("/orders", async (req, res) => {
-
             const orders = req.body;
             const result = await ordersCollection.insertOne(orders);
             res.send(result);
@@ -45,6 +57,13 @@ async function run() {
         // GET == orders
 
         app.get("/orders", async (req, res) => {
+            const orders = await ordersCollection.find().toArray();
+            res.send(orders);
+        });
+
+        // GET == orders by email
+
+        app.get("/order", async (req, res) => {
             const email = req.query.email;
             if (email) {
                 const query = { email: email };
@@ -55,21 +74,21 @@ async function run() {
                 res.status(403).send({ message: "Forbidden access" });
             }
         });
-        //POST
+        //PUT
 
         app.put("/payment/:email/:id", async (req, res) => {
             email = req.params.email;
             const orderId = req.params.id;
             const filter = { email: email, _id: ObjectId(orderId) };
             const updatedDoc = {
-              $set: {
-                paid: true,
-              },
+                $set: {
+                    paid: true,
+                },
             };
             const updatedOrder = await ordersCollection.updateOne(filter, updatedDoc);
 
             res.send(updatedOrder);
-          });
+        });
 
 
 
