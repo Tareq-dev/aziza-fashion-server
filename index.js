@@ -90,8 +90,43 @@ async function run() {
             res.send(updatedOrder);
         });
 
+        //Shipment
+
+        app.put("/shipment/:id", async (req, res) => {
+            const orderId = req.params.id;
+            console.log(orderId)
+
+            const filter = { _id: ObjectId(orderId) };
+            const updatedDoc = {
+                $set: {
+                    shipment: true,
+                },
+            };
+            const updatedOrder = await ordersCollection.updateOne(filter, updatedDoc);
+
+            res.send(updatedOrder);
+        });
 
 
+        //delete order 
+
+
+        app.delete("/orders/cart/:id/:cartId", async (req, res) => {
+            const id = req.params.id;
+            const cartId = req.params.cartId;
+            // console.log(id)
+            console.log(cartId)
+            const query = { _id: ObjectId(id) };
+            const cursor = await ordersCollection.findOne(query);
+            const findCart = cursor.cart.find(x => x._id === cartId)
+            // console.log(findCart)
+            const cartQuery = { _id: findCart._id };
+            // console.log(cartQuery)
+
+            const result = await ordersCollection.deleteOne(cartQuery);
+            console.log(ordersCollection)
+            res.send(result);
+        });
 
     } finally {
         // await client.close();
