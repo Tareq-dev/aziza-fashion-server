@@ -18,7 +18,7 @@ async function run() {
         await client.connect();
         const productsCollection = client.db("azizaFashion").collection("products");
         const ordersCollection = client.db("azizaFashion").collection("orders")
-        const paymentCollection = client.db("azizaFashion").collection("payment")
+        const usersCollection = client.db("azizaFashion").collection("users")
 
         // GET == products
         app.get("/products", async (req, res) => {
@@ -63,16 +63,12 @@ async function run() {
 
         // GET == orders by email
 
-        app.get("/order", async (req, res) => {
-            const email = req.query.email;
-            if (email) {
-                const query = { email: email };
-                const cursor = ordersCollection.find(query);
-                const orders = await cursor.toArray();
-                res.send(orders);
-            } else {
-                res.status(403).send({ message: "Forbidden access" });
-            }
+        app.get("/order/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const cursor = ordersCollection.find(query);
+            const orders = await cursor.toArray();
+            res.send(orders);
         });
         //PUT
 
@@ -111,23 +107,60 @@ async function run() {
         //delete order 
 
 
-        app.delete("/orders/cart/:id/:cartId", async (req, res) => {
-            const id = req.params.id;
-            const cartId = req.params.cartId;
-            // console.log(id)
-            console.log(cartId)
-            const query = { _id: ObjectId(id) };
-            const cursor = await ordersCollection.findOne(query);
-            const findCart = cursor.cart.find(x => x._id === cartId)
-            // console.log(findCart)
-            const cartQuery = { _id: findCart._id };
-            // console.log(cartQuery)
+        // app.delete("/orders/cart/:id/:cartId", async (req, res) => {
+        //     const id = req.params.id;
+        //     const cartId = req.params.cartId;
+        //     // console.log(id)
+        //     console.log(cartId)
+        //     const query = { _id: ObjectId(id) };
+        //     const cursor = await ordersCollection.findOne(query);
+        //     const findCart = cursor.cart.find(x => x._id === cartId)
+        //     // console.log(findCart)
+        //     const cartQuery = { _id: findCart._id };
+        //     // console.log(cartQuery)
 
-            const result = await ordersCollection.deleteOne(cartQuery);
-            console.log(ordersCollection)
+        //     const result = await ordersCollection.deleteOne(cartQuery);
+        //     console.log(ordersCollection)
+        //     res.send(result);
+        // });
+
+
+        // user PUT
+        app.put("/user/:email", async (req, res) => {
+            const email = req.params.email;
+            const user = req.body
+            const filter = { email: email };
+            const option = { upsert: true }
+            const updatedDoc = { $set: user }
+            const result = await usersCollection.updateOne(filter, updatedDoc, option)
+            res.send(result);
+        });
+        //Get user
+        app.get("/users", async (req, res) => {
+            const user = await usersCollection.find().toArray();
+            res.send(user);
+        });
+
+        //make admin put
+
+        app.put("/users/admin/:email", async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const updateDoc = {
+                $set: { role: "admin" },
+            };
+            const result = await usersCollection.updateOne(filter, updateDoc);
             res.send(result);
         });
 
+
+        // delete user 
+        app.delete("/user/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await usersCollection.deleteOne(query);
+            res.send(result);
+          });
     } finally {
         // await client.close();
     }
