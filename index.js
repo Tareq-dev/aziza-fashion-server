@@ -90,7 +90,6 @@ async function run() {
 
         app.put("/shipment/:id", async (req, res) => {
             const orderId = req.params.id;
-            console.log(orderId)
 
             const filter = { _id: ObjectId(orderId) };
             const updatedDoc = {
@@ -105,24 +104,6 @@ async function run() {
 
 
         //delete order 
-
-
-        // app.delete("/orders/cart/:id/:cartId", async (req, res) => {
-        //     const id = req.params.id;
-        //     const cartId = req.params.cartId;
-        //     // console.log(id)
-        //     console.log(cartId)
-        //     const query = { _id: ObjectId(id) };
-        //     const cursor = await ordersCollection.findOne(query);
-        //     const findCart = cursor.cart.find(x => x._id === cartId)
-        //     // console.log(findCart)
-        //     const cartQuery = { _id: findCart._id };
-        //     // console.log(cartQuery)
-
-        //     const result = await ordersCollection.deleteOne(cartQuery);
-        //     console.log(ordersCollection)
-        //     res.send(result);
-        // });
 
 
         // user PUT
@@ -140,6 +121,15 @@ async function run() {
             const user = await usersCollection.find().toArray();
             res.send(user);
         });
+        //Get single user
+        app.get("/user/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await usersCollection.findOne(query);
+            res.send(result);
+        });
+
+
 
         //make admin put
 
@@ -160,7 +150,16 @@ async function run() {
             const query = { email: email };
             const result = await usersCollection.deleteOne(query);
             res.send(result);
-          });
+        });
+
+        // GET ADMIN
+        app.get("/admin/:email", async (req, res) => {
+            const email = req.params.email;
+            const user = await usersCollection.findOne({ email: email });
+            const isAdmin = user?.role === "admin";
+            res.send({ admin: isAdmin });
+
+        });
     } finally {
         // await client.close();
     }
