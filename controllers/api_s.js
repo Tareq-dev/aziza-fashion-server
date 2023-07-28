@@ -12,3 +12,17 @@ module.exports.getProducts = async (req, res, next) => {
       next(error);
     }
   };
+
+  // GET == single products
+
+module.exports.getSingleProductById = async (req, res, next) => {
+    try {
+      const db = await connect();
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await db.collection("products").findOne(query);
+      res.json({ success: true, result });
+    } catch (error) {
+      next(error);
+    }
+  };
