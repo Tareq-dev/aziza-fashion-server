@@ -56,3 +56,16 @@ module.exports.addProduct = async (req, res, next) => {
       next(error);
     }
   };
+
+  
+// GET == orders
+
+module.exports.getOrder = async (req, res, next) => {
+    try {
+      const db = await connect();
+      const result = await db.collection("orders").find().toArray();
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
