@@ -41,3 +41,18 @@ module.exports.deleteProductById = async (req, res, next) => {
     }
   };
   
+  
+//POST PRODUCT
+
+module.exports.addProduct = async (req, res, next) => {
+    try {
+      const db = await connect();
+      const products = req.body;
+      console.log(products);
+      const result = await db.collection("products").insertOne(products);
+      console.log(result);
+      res.json({ success: true, result });
+    } catch (error) {
+      next(error);
+    }
+  };
