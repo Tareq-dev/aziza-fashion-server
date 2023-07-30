@@ -80,3 +80,18 @@ module.exports.postOrder = async (req, res, next) => {
     next(error);
   }
 };
+
+
+// GET == orders by email
+
+module.exports.getOrderByEmail = async (req, res, next) => {
+    try {
+      const db = await connect();
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await db.collection("orders").find(query).toArray();
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
