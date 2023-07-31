@@ -81,17 +81,41 @@ module.exports.postOrder = async (req, res, next) => {
   }
 };
 
-
 // GET == orders by email
 
 module.exports.getOrderByEmail = async (req, res, next) => {
-    try {
-      const db = await connect();
-      const email = req.params.email;
-      const query = { email: email };
-      const result = await db.collection("orders").find(query).toArray();
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  };
+  try {
+    const db = await connect();
+    const email = req.params.email;
+    const query = { email: email };
+    const result = await db.collection("orders").find(query).toArray();
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// PUT
+
+module.exports.updateOrder = async (req, res, next) => {
+  try {
+    const db = await connect();
+    const email = req.params.email;
+    const orderId = req.params.id;
+    const filter = { email: email, _id: ObjectId(orderId) };
+    const updatedDoc = {
+      $set: {
+        paid: true,
+      },
+    };
+    const updatedOrder = await db
+      .collection("orders")
+      .updateOne(filter, updatedDoc);
+
+    console.log(updatedOrder);
+
+    res.json(updatedOrder);
+  } catch (error) {
+    next(error);
+  }
+};
