@@ -139,3 +139,14 @@ module.exports.putShipment = async (req, res, next) => {
     next(error);
   }
 };
+//Get user
+
+module.exports.getAllUsers = async (req, res, next) => {
+    try {
+      const db = await connect();
+      const result = await db.collection("users").find().toArray();
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
