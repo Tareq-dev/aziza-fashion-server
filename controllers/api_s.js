@@ -142,24 +142,42 @@ module.exports.putShipment = async (req, res, next) => {
 //Get user
 
 module.exports.getAllUsers = async (req, res, next) => {
-    try {
-      const db = await connect();
-      const result = await db.collection("users").find().toArray();
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  };
-  //Get single user
+  try {
+    const db = await connect();
+    const result = await db.collection("users").find().toArray();
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+//Get single user
 
 module.exports.getSingleUsers = async (req, res, next) => {
-    try {
-      const db = await connect();
-      const email = req.params.email;
-      const query = { email: email };
-      const result = await db.collection("users").findOne(query);
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  };
+  try {
+    const db = await connect();
+    const email = req.params.email;
+    const query = { email: email };
+    const result = await db.collection("users").findOne(query);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//    make admin put
+
+module.exports.makeAdmin = async (req, res, next) => {
+  try {
+    const db = await connect();
+    const email = req.params.email;
+    const filter = { email: email };
+    const updateDoc = {
+      $set: { role: "admin" },
+    };
+    const result = await db.collection("users").updateOne(filter, updateDoc);
+    console.log(result);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
