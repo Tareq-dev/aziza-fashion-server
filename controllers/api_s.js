@@ -119,3 +119,23 @@ module.exports.updateOrder = async (req, res, next) => {
     next(error);
   }
 };
+
+//     //Shipment
+
+module.exports.putShipment = async (req, res, next) => {
+  try {
+    const db = await connect();
+    const orderId = req.params.id;
+
+    const filter = { _id: ObjectId(orderId) };
+    const updatedDoc = {
+      $set: {
+        shipment: true,
+      },
+    };
+    const result = await db.collection("orders").updateOne(filter, updatedDoc);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
