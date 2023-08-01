@@ -150,3 +150,16 @@ module.exports.getAllUsers = async (req, res, next) => {
       next(error);
     }
   };
+  //Get single user
+
+module.exports.getSingleUsers = async (req, res, next) => {
+    try {
+      const db = await connect();
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await db.collection("users").findOne(query);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
