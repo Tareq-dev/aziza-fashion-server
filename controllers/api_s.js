@@ -185,17 +185,41 @@ module.exports.makeAdmin = async (req, res, next) => {
 //  user PUT
 
 module.exports.putUser = async (req, res, next) => {
-    try {
-      const email = req.params.email;
-      const user = req.body;
-      const filter = { email: email };
-      const option = { upsert: true };
-      const updatedDoc = { $set: user };
-      const result = await usersCollection.updateOne(filter, updatedDoc, option);
-      console.log(result);
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  };
-  
+  try {
+    const email = req.params.email;
+    const user = req.body;
+    const filter = { email: email };
+    const option = { upsert: true };
+    const updatedDoc = { $set: user };
+    const result = await usersCollection.updateOne(filter, updatedDoc, option);
+    console.log(result);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// delete user
+
+module.exports.deleteUser = async (req, res, next) => {
+  try {
+    const email = req.params.email;
+    const query = { email: email };
+    const result = await usersCollection.deleteOne(query);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+// delete user
+
+module.exports.deleteUser = async (req, res, next) => {
+  try {
+    const email = req.params.email;
+    const query = { email: email };
+    const result = await usersCollection.deleteOne(query);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
