@@ -211,14 +211,14 @@ module.exports.deleteUser = async (req, res, next) => {
     next(error);
   }
 };
-// delete user
+// GET ADMIN
 
 module.exports.deleteUser = async (req, res, next) => {
   try {
     const email = req.params.email;
-    const query = { email: email };
-    const result = await usersCollection.deleteOne(query);
-    res.json(result);
+    const user = await usersCollection.findOne({ email: email });
+    const isAdmin = user?.role === "admin";
+    res.send({ admin: isAdmin });
   } catch (error) {
     next(error);
   }
