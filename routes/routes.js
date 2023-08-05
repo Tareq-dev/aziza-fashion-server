@@ -14,15 +14,17 @@ const {
   getSingleUsers,
   makeAdmin,
   deleteUser,
+  getAdmin,
 } = require("../controllers/api_s");
 const router = express.Router();
 
 router.get("/products", getProducts);
 router.get("/product/:id", getSingleProductById);
 router.get("/orders", getOrder);
-router.get("/orders", getOrder);
 router.get("/user/:email", getSingleUsers);
+router.get("/users", getAllUsers);
 router.get("/order/:email", getOrderByEmail);
+router.get("/admin/:email", getAdmin);
 router.put("/users/admin/:email", makeAdmin);
 router.delete("/user/:email", deleteUser);
 router.post("/order", postOrder);

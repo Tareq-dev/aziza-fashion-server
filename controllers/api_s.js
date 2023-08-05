@@ -213,13 +213,29 @@ module.exports.deleteUser = async (req, res, next) => {
 };
 // GET ADMIN
 
-module.exports.deleteUser = async (req, res, next) => {
+module.exports.getAdmin = async (req, res, next) => {
   try {
     const email = req.params.email;
-    const user = await usersCollection.findOne({ email: email });
-    const isAdmin = user?.role === "admin";
+    const db = await connect();
+    const admin = await db.collection("users").findOne({ email: email });
+    console.log(admin);
+
+    const isAdmin = admin?.role === "admin";
     res.send({ admin: isAdmin });
   } catch (error) {
     next(error);
   }
+};
+
+// DELETE ADMIN
+
+module.exports.deleteUser = async (req, res, next) => {
+  // try {
+  //   const email = req.params.email;
+  //   const user = await usersCollection.findOne({ email: email });
+  //   const isAdmin = user?.role === "admin";
+  //   res.send({ admin: isAdmin });
+  // } catch (error) {
+  //   next(error);
+  // }
 };
