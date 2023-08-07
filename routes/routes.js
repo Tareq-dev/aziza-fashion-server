@@ -13,7 +13,7 @@ const {
   getAllUsers,
   getSingleUsers,
   makeAdmin,
-  deleteUser,
+  deleteAdmin,
   getAdmin,
 } = require("../controllers/api_s");
 const router = express.Router();
@@ -26,7 +26,7 @@ router.get("/users", getAllUsers);
 router.get("/order/:email", getOrderByEmail);
 router.get("/admin/:email", getAdmin);
 router.put("/users/admin/:email", makeAdmin);
-router.delete("/user/:email", deleteUser);
+router.delete("/admin/:email", deleteAdmin);
 router.post("/order", postOrder);
 router.post("/product", addProduct);
 router.put("/payment/:email/:id", updateOrder);

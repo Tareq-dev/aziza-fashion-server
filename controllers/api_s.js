@@ -49,7 +49,6 @@ module.exports.addProduct = async (req, res, next) => {
     const products = req.body;
     console.log(products);
     const result = await db.collection("products").insertOne(products);
-    console.log(result);
     res.json({ success: true, result });
   } catch (error) {
     next(error);
@@ -201,12 +200,13 @@ module.exports.putUser = async (req, res, next) => {
 
 // delete user
 
-module.exports.deleteUser = async (req, res, next) => {
+module.exports.deleteAdmin = async (req, res, next) => {
   try {
     const email = req.params.email;
     const query = { email: email };
-    const result = await usersCollection.deleteOne(query);
-    res.json(result);
+    const db = await connect();
+    const adminDeleted = await db.collection("users").deleteOne(query);
+    res.json(adminDeleted);
   } catch (error) {
     next(error);
   }
@@ -218,24 +218,10 @@ module.exports.getAdmin = async (req, res, next) => {
     const email = req.params.email;
     const db = await connect();
     const admin = await db.collection("users").findOne({ email: email });
-    console.log(admin);
 
     const isAdmin = admin?.role === "admin";
     res.send({ admin: isAdmin });
   } catch (error) {
     next(error);
   }
-};
-
-// DELETE ADMIN
-
-module.exports.deleteUser = async (req, res, next) => {
-  // try {
-  //   const email = req.params.email;
-  //   const user = await usersCollection.findOne({ email: email });
-  //   const isAdmin = user?.role === "admin";
-  //   res.send({ admin: isAdmin });
-  // } catch (error) {
-  //   next(error);
-  // }
 };
