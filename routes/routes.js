@@ -18,20 +18,27 @@ const {
 } = require("../controllers/api_s");
 const router = express.Router();
 
+//----------------- Products Route
 router.get("/products", getProducts);
 router.get("/product/:id", getSingleProductById);
-router.get("/orders", getOrder);
-router.get("/user/:email", getSingleUsers);
-router.get("/users", getAllUsers);
-router.get("/order/:email", getOrderByEmail);
-router.get("/admin/:email", getAdmin);
-router.put("/users/admin/:email", makeAdmin);
-router.delete("/admin/:email", deleteAdmin);
-router.post("/order", postOrder);
 router.post("/product", addProduct);
+router.delete("/product/:id", deleteProductById);
+
+//----------------- Orders Route
+router.get("/orders", getOrder);
+router.get("/order/:email", getOrderByEmail);
+router.post("/order", postOrder);
+
+//----------------- USERs Route
+router.get("/user/:email", getSingleUsers);
+router.put("/users/admin/:email", makeAdmin);
+router.get("/users", getAllUsers);
+router.put("/user/:email", putUser);
+
+//----------------- Admin Route
+router.get("/admin/:email", getAdmin);
+router.delete("/admin/:email", deleteAdmin);
 router.put("/payment/:email/:id", updateOrder);
 router.put("/shipment/:id", putShipment);
-router.put("/user/:email", putUser);
-router.delete("/product/:id", deleteProductById);
 
 module.exports = router;
